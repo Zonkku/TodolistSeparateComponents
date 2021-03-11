@@ -1,35 +1,43 @@
 import React, {useState} from 'react';
+import Todotable from './Todotable';
 
-export default function Todolist(props) {
-
-    const [itemIndex, setItemIndex] = useState(0);
-    
-    const deleteItem = (event) => {
-        setItemIndex(event.target.value);
-        props.todos.filter((todo, i) => i !== itemIndex)
+    function Todolist(props) {
+        const [todo, setTodo] = useState({desc:'', date:''});
+        const [todos, setTodos] = useState([]);
+      
+        const inputChanged = (event) => {
+          setTodo({...todo, [event.target.name]: event.target.value});
+        }
         
-    }
+        const addTodo = (event) => {
+          event.preventDefault();
+          setTodos([...todos, todo]);
+        }
+      
+  
+        const deleteItem = (index) => {
+            console.log(index)
+            setTodos(todos.filter((todo, i) => i !== index))
+            
+        }
 
-    return (
-        <div>
-            <table>
-                <tbody>
-                    <tr><th>Date</th><th>Description</th></tr>
-                {
-                    
-                    props.todos.map((todo, index) =>
-                        <tr key={index}>
-                            <td>{todo.date}</td>
-                            <td>{todo.desc}</td>
-                            <td><button name="index" value={index} onClick={deleteItem}>Delete</button></td>
-                        </tr>
-                    
-                        
-                    )
-                }
-                </tbody>
-            </table>
-        </div>
-    )
+        return (
+            <div className="App">
+                <h1>Simple Todolist</h1>
+                Add todo: 
+                <br></br>
+                <br></br>
+                <form onSubmit={addTodo}>
+                Description:
+                <input type="text" name='desc' value={todo.desc} onChange={inputChanged}/>
+                Date:
+                <input type="date" name='date' value={todo.date} onChange={inputChanged}/>
+                <input type='submit' value="Add"/>
+                </form>
+                <Todotable todos={todos} deleteItem={deleteItem}/>
+            </div>
+        )
 
 }
+
+export default Todolist;
